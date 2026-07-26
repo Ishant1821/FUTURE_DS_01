@@ -26,7 +26,7 @@ This repository contains the official submission for **Task 1** of the Data Scie
 
 3. **Monthly Revenue Trend:**
    * Sales show significant variance throughout the year, with a massive spike in revenue leading into the final quarter (Q4), peaking in November. 
-   * *See `powerbi_dashboard.png` for the detailed visual breakdown.*
+   * ![Power BI Sales Dashboard](powerbi_dashboard.png)
 
 ## Files in this Repository
 * `sales_performance_analysis.py`: The Python script used to explore and clean the initial dataset.
