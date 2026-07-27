@@ -1,43 +1,26 @@
-import os
-import kagglehub
 import pandas as pd
-import matplotlib.pyplot as plt
 
-# 1. Download and load the dataset
-print("Downloading dataset...")
-path = kagglehub.dataset_download("ulrikthygepedersen/online-retail-dataset")
-csv_file = [f for f in os.listdir(path) if f.endswith(".csv")][0]
+# 1. Load the raw dataset 
+# (Using the exact KaggleHub path used in the Power BI ETL pipeline)
+file_path = r"C:\Users\i0240\.cache\kagglehub\datasets\ulrikthygepedersen\online-retail-dataset\versions\2\online_retail.csv"
+df = pd.read_csv(file_path)
 
-df = pd.read_csv(os.path.join(path, csv_file))
-print("Data loaded successfully!")
+# 2. Data Cleaning
+# Drop rows where CustomerID is missing to ensure data integrity
+df_clean = df.dropna(subset=['CustomerID']).copy()
 
-# 2. Clean the data
-df = df.dropna(subset=["CustomerID"])
-df = df[~df["InvoiceNo"].astype(str).str.startswith("C")]
-df = df[(df["Quantity"] > 0) & (df["UnitPrice"] > 0)]
-df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+# Filter out cancellations, negative quantities, and zero prices
+df_clean = df_clean[(df_clean['Quantity'] > 0) & (df_clean['UnitPrice'] > 0)]
 
-# 3. Calculate total revenue
-df['TotalRevenue'] = df['Quantity'] * df['UnitPrice']
-total_sales = df['TotalRevenue'].sum()
-print(f"\nTotal Sales Revenue: ${total_sales:,.2f}")
+# 3. Data Transformation
+# Ensure InvoiceDate is a proper datetime object for time-series analysis
+df_clean['InvoiceDate'] = pd.to_datetime(df_clean['InvoiceDate'])
 
-# 4. Find top products
-print("\nTop 5 Products by Revenue:")
-print(df.groupby('Description')['TotalRevenue'].sum().nlargest(5))
+# Create the Total Revenue column 
+df_clean['Total Revenue'] = df_clean['Quantity'] * df_clean['UnitPrice']
 
-# 5. Plot and save monthly revenue trend
-df['YearMonth'] = df['InvoiceDate'].dt.to_period('M')
-monthly_revenue = df.groupby('YearMonth')['TotalRevenue'].sum()
-monthly_revenue.index = monthly_revenue.index.astype(str)
-
-plt.figure(figsize=(10, 5))
-monthly_revenue.plot(kind="line", marker="o", color="b", linewidth=2)
-plt.title("Monthly Revenue Trend", fontsize=14, fontweight='bold')
-plt.xlabel("Month", fontsize=12)
-plt.ylabel("Total Revenue ($)", fontsize=12)
-plt.grid(True, linestyle="--", alpha=0.7)
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.savefig("monthly_revenue_trend.png", dpi=300)
-plt.show()
+# 4. Pipeline Verification Output
+print("--- Data Cleaning Pipeline Complete ---")
+print(f"Total Rows Cleaned & Kept: {len(df_clean):,}")
+print(f"Total Sales Revenue Processed: ${df_clean['Total Revenue'].sum():,.2f}")
+print("Ready for Power BI Integration.")
