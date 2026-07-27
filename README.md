@@ -11,6 +11,7 @@ This repository contains the official submission for **Task 1** of the Data Scie
 * **Python** (Data manipulation and initial cleaning)
 * **Pandas** (Data aggregation)
 * **Power BI** (Interactive dashboard creation and data visualization)
+* **Python & Power BI Integration:** Leveraged Power BI's native Python script execution to automate the data extraction and cleaning pipeline directly into the dashboard.
 
 ## Key Business Insights
 
@@ -26,10 +27,11 @@ This repository contains the official submission for **Task 1** of the Data Scie
 
 3. **Monthly Revenue Trend:**
    * Sales show significant variance throughout the year, with a massive spike in revenue leading into the final quarter (Q4), peaking in November. 
-   * ![Power BI Sales Dashboard](powerbi_dashboard.png)
+
+![Power BI Sales Dashboard](powerbi_dashboard.png)
 
 ## Files in this Repository
-* `sales_performance_analysis.py`: The Python script used to explore and clean the initial dataset.
-* `Sales_Dashboard.pbix`: The interactive Power BI dashboard file containing the final visualizations.
+* `sales_performance_analysis.py`: The Python script used to explore and test the initial dataset cleaning logic.
+* `Sales_Dashboard.pbix`: The interactive Power BI dashboard file, containing the embedded Python ETL script.
 * `powerbi_dashboard.png`: A high-quality screenshot of the completed Power BI dashboard.
 * `README.md`: Project documentation and findings summary.
